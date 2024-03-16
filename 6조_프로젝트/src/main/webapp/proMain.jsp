@@ -182,13 +182,6 @@ function deleteProduct() {
    <h3>상품관리</h3>
      <br>
      <hr>
-     <div class="drop">
-         <form name="searchfrm" method="get" action="/totalAdmin/_product.list.php" class="data_search">
-           <input type="hidden" name="mode" value="search">
-           <input type="hidden" name="st" value="">
-           <input type="hidden" name="so" value="">
-           <input type="hidden" name="listmaxcount" value="">
-           <input type="hidden" name="_cpid" value="">
         
             <div class="comp_search">
             <div class="form_wrap">
@@ -201,8 +194,8 @@ function deleteProduct() {
                 <input type="search" name="pass_input_value" class="design" value="" placeholder="검색어" />
              <!--   <input type="submit" name="" value="" accesskey="s" class="btn_search" title="검색" />  --> 
                  <a href='#' id="icon1"><i class="material-icons">search</i></a>
-           </div></div></div></form></div>
-     <br><hr>
+           </div></div></div>
+     <br><br><hr>
 <table id="myTable">
   <tr class="header">
      <th id="proMenu-1">순위(판매가)</th>
