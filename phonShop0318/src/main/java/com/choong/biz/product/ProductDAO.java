@@ -18,9 +18,10 @@ public class ProductDAO {
    private String PRODUCT_GET = "select * from productManagement where productCode=?";   
    private String PRODUCT_LIST = "select * from productManagement";
    private String PRODUCT_INSERT = "insert into productManagement values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-   private String PRODUCT_UPDATE = "update productCode set productDisplayStatus=?, productSalePrice=?, productInventoryQuantity=?, productRegistrationDate=?, productName=?, "
-         + "productSaleCount=?, productDiscountStatus=?, productOriginalPrice=?, productCostPrice=?, productPaymentType=?, productContent=?, productImage=?, "
-         + "productHashtags=?, mainCategory=?, subCategory=?, productBest=?, where productCode=?";
+   private String PRODUCT_UPDATE = "update productDisplayStatus set productSalePrice=?, productInventoryQuantity=?, "
+         + "productRegistrationDate=?, productName=?, productSaleCount=?, productDiscountStatus=?, productOriginalPrice=?, "
+         + "productCostPrice=?, productPaymentType=?, productContent=?, productImage=?, productHashtags=?, "
+   		 + "mainCategory=?, subCategory=?, productBest=?, where productCode=?, where productCode=?";
    
    private String PRODUCT_DELETE = "delete from productCode where productCode=?";
 
@@ -36,23 +37,23 @@ public class ProductDAO {
          pstmt = con.prepareStatement(PRODUCT_GET);   
 
          proList = new ProductDTO();   
-         proList.setProductCode(rs.getString("productCode"));
-         proList.setProductDisplayStatus(rs.getInt(2));
-         proList.setProductSalePrice(rs.getInt(3));
-         proList.setProductInventoryQuantity(rs.getInt(4));
+         proList.setProductDisplayStatus(rs.getInt("productDisplayStatus"));
+         proList.setProductSalePrice(rs.getInt("productSalePrice"));
+         proList.setProductInventoryQuantity(rs.getInt("productInventoryQuantity"));
          proList.setProductRegistrationDate(rs.getDate("productRegistrationDate"));
          proList.setProductName(rs.getString("productName"));
-         proList.setProductSaleCount(rs.getInt(7));
-         proList.setProductDiscountStatus(rs.getInt(8));
-         proList.setProductOriginalPrice(rs.getInt(9));
-         proList.setProductCostPrice(rs.getInt(10));
+         proList.setProductSaleCount(rs.getInt("productSaleCount"));
+         proList.setProductDiscountStatus(rs.getInt("productDiscountStatus"));
+         proList.setProductOriginalPrice(rs.getInt("productOriginalPrice"));
+         proList.setProductCostPrice(rs.getInt("productCostPrice"));
          proList.setProductPaymentType(rs.getString("productPaymentType"));
          proList.setProductContent(rs.getString("productContent"));
          proList.setProductImage(rs.getString("productImage"));
          proList.setProductHashtags(rs.getString("productHashtags"));
          proList.setMainCategory(rs.getString("mainCategory"));
          proList.setSubCategory(rs.getString("subCategory"));
-         proList.setProductBest(rs.getInt(17));
+         proList.setProductBest(rs.getInt("productBest"));
+         proList.setProductCode(rs.getString("productCode"));
          
          pstmt.executeUpdate();   
       } catch (SQLException e) {
@@ -62,7 +63,48 @@ public class ProductDAO {
       }
    }
 
-   // [ 2 ] Update
+   
+   
+//  [ 1-2 ] 삽입하고 처리결과를 넘겨주기 | 성공;1 실패-1 리턴
+ public int productInsertCheck (ProductDTO dto) {
+	int result = -1;
+    
+	try {
+    	
+       con = MyDBConnection.getConnection();
+       
+       pstmt = con.prepareStatement("insert into productManagement (productDisplayStatus, productSalePrice, productInventoryQuantity, productRegistrationDate, productName, productSaleCount, productDiscountStatus, productOriginalPrice, productCostPrice, productPaymentType, productContent, productImage, productHashtags, mainCategory, subCategory, productBest, productCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+       
+       pstmt.setInt(1, dto.getProductDisplayStatus());
+       pstmt.setInt(2, dto.getProductSalePrice());
+       pstmt.setInt(3, dto.getProductInventoryQuantity());
+       pstmt.setDate(4, dto.getProductRegistrationDate());
+       pstmt.setString(5, dto.getProductName());
+       pstmt.setInt(6, dto.getProductSaleCount());
+       pstmt.setInt(7, dto.getProductDiscountStatus());
+       pstmt.setInt(8, dto.getProductOriginalPrice());
+       pstmt.setInt(9, dto.getProductCostPrice());
+       pstmt.setString(10, dto.getProductPaymentType());
+       pstmt.setString(11, dto.getProductContent());
+       pstmt.setString(12, dto.getProductImage());
+       pstmt.setString(13, dto.getProductHashtags());
+       pstmt.setString(14, dto.getMainCategory());
+       pstmt.setString(15, dto.getSubCategory());
+       pstmt.setInt(16, dto.getProductBest());   
+       pstmt.setString(17, dto.getProductCode());   
+       
+       
+       result = pstmt.executeUpdate();   
+       
+    } catch (SQLException e) {
+       e.printStackTrace();
+    } finally {
+       MyDBConnection.close(rs, pstmt, con);
+    }
+    return result;
+ }
+
+// [ 2 ] Update
    
    public void productUpdate(ProductDTO dto) {
 
@@ -70,23 +112,23 @@ public class ProductDAO {
          con = MyDBConnection.getConnection();
          pstmt = con.prepareStatement(PRODUCT_UPDATE);
          
-         pstmt.setString(1, dto.getProductCode());   
-         pstmt.setInt(2, dto.getProductDisplayStatus());
-         pstmt.setInt(3, dto.getProductSalePrice());
-         pstmt.setInt(4, dto.getProductInventoryQuantity());
-         pstmt.setDate(5, dto.getProductRegistrationDate());
-         pstmt.setString(6, dto.getProductName());
-         pstmt.setInt(7, dto.getProductSaleCount());
-         pstmt.setInt(8, dto.getProductDiscountStatus());
-         pstmt.setInt(9, dto.getProductOriginalPrice());
-         pstmt.setInt(10, dto.getProductCostPrice());
-         pstmt.setString(11, dto.getProductPaymentType());
-         pstmt.setString(12, dto.getProductContent());
-         pstmt.setString(13, dto.getProductImage());
-         pstmt.setString(14, dto.getProductHashtags());
-         pstmt.setString(15, dto.getMainCategory());
-         pstmt.setString(16, dto.getSubCategory());
-         pstmt.setInt(17, dto.getProductBest());   
+         pstmt.setInt(1, dto.getProductDisplayStatus());
+         pstmt.setInt(2, dto.getProductSalePrice());
+         pstmt.setInt(3, dto.getProductInventoryQuantity());
+         pstmt.setDate(4, dto.getProductRegistrationDate());
+         pstmt.setString(5, dto.getProductName());
+         pstmt.setInt(6, dto.getProductSaleCount());
+         pstmt.setInt(7, dto.getProductDiscountStatus());
+         pstmt.setInt(8, dto.getProductOriginalPrice());
+         pstmt.setInt(9, dto.getProductCostPrice());
+         pstmt.setString(10, dto.getProductPaymentType());
+         pstmt.setString(11, dto.getProductContent());
+         pstmt.setString(12, dto.getProductImage());
+         pstmt.setString(13, dto.getProductHashtags());
+         pstmt.setString(14, dto.getMainCategory());
+         pstmt.setString(15, dto.getSubCategory());
+         pstmt.setInt(16, dto.getProductBest());   
+         pstmt.setString(17, dto.getProductCode());   
 
          pstmt.executeUpdate();
          
@@ -97,6 +139,47 @@ public class ProductDAO {
       }
       
    }
+   
+   
+// [ 2-2 ] Update - 삽입하고 처리결과를 넘겨주기 | 성공;1 실패-1 리턴
+   public int productUpdateCheck (ProductDTO dto) {
+	   int result = -1;
+	   try {
+ 	
+	    con = MyDBConnection.getConnection();
+	    
+	    pstmt = con.prepareStatement("insert into productManagement (productDisplayStatus, productSalePrice, productInventoryQuantity, productRegistrationDate, productName, productSaleCount, productDiscountStatus, productOriginalPrice, productCostPrice, productPaymentType, productContent, productImage, productHashtags, mainCategory, subCategory, productBest, productCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+	    
+	    pstmt.setInt(1, dto.getProductDisplayStatus());
+	    pstmt.setInt(2, dto.getProductSalePrice());
+	    pstmt.setInt(3, dto.getProductInventoryQuantity());
+	    pstmt.setDate(4, dto.getProductRegistrationDate());
+	    pstmt.setString(5, dto.getProductName());
+	    pstmt.setInt(6, dto.getProductSaleCount());
+	    pstmt.setInt(7, dto.getProductDiscountStatus());
+	    pstmt.setInt(8, dto.getProductOriginalPrice());
+	    pstmt.setInt(9, dto.getProductCostPrice());
+	    pstmt.setString(10, dto.getProductPaymentType());
+	    pstmt.setString(11, dto.getProductContent());
+	    pstmt.setString(12, dto.getProductImage());
+	    pstmt.setString(13, dto.getProductHashtags());
+	    pstmt.setString(14, dto.getMainCategory());
+	    pstmt.setString(15, dto.getSubCategory());
+	    pstmt.setInt(16, dto.getProductBest());   
+	    pstmt.setString(17, dto.getProductCode());   
+    
+    
+	    result = pstmt.executeUpdate();   
+    
+	 } catch (SQLException e) {
+	    e.printStackTrace();
+	 } finally {
+	    MyDBConnection.close(rs, pstmt, con);
+	 }
+	 return result;
+	}  
+	 
+   
    
    // [ 3 ] Delete
    
